@@ -2,10 +2,19 @@ import { FontDisplay, useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import LoginScreen from './app/Screens/login/LoginScreen';
 
+// Clerk
+import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo';
+
 SplashScreen.preventAutoHideAsync();
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!publishableKey) {
+  throw new Error('Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env')
+}
 
 export default function App() {
   const [loaded, error] = useFonts({
@@ -25,10 +34,17 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <LoginScreen />
-      <StatusBar style="auto" />
-    </View>
+    <ClerkProvider publishableKey={publishableKey}>
+      <View style={styles.container}>
+        <SignedIn>
+          <Text>You are signed in....</Text>
+        </SignedIn>
+        <SignedOut>
+          <LoginScreen />
+        </SignedOut>
+        <StatusBar style="auto" />
+      </View>
+    </ClerkProvider>
   );
 }
 
