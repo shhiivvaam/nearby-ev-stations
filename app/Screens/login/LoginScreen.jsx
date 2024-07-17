@@ -17,14 +17,14 @@ export default function LoginScreen() {
 
     const onPress = async () => {
         try {
-            const { createdSessionId, signIn, signUp, setActive  } = await startOAuthFlow();
+            const { createdSessionId, signIn, signUp, setActive } = await startOAuthFlow();
 
-            if(createdSessionId) {
+            if (createdSessionId) {
                 setActive({ session: createdSessionId });
             } else {
                 // do something
             }
-        } catch(err) {
+        } catch (err) {
             console.log("OAuth Error", err);
         }
     }
